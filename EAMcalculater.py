@@ -27,6 +27,27 @@ def mouth_aspect_ratio(top_lip, bottom_lip):
     pass
 
 
+# 计算单眉EBAR值
+def eyebrow_aspect_ratio(eyebrow):
+    x1, x2, y1, y2 = eyebrow[0][0], eyebrow[0][0], eyebrow[0][1], eyebrow[0][1]
+    for point in eyebrow:
+        x1 = point[0] if point[0] < x1 else x1
+        x2 = point[0] if point[0] > x2 else x2
+        y1 = point[1] if point[1] < y1 else y1
+        y2 = point[1] if point[1] > y2 else y2
+
+    new_eyebrow_x = []
+    new_eyebrow_y = []
+    for point in eyebrow:
+        new_x = (point[0] - x1) / (x2 - x1)
+        new_y = (point[1] - y1) / (y2 - y1)
+        new_eyebrow_x.append(new_x)
+        new_eyebrow_y.append(new_y)
+    # print(x1, x2, y1, y2, "\n")
+    return new_eyebrow_x, new_eyebrow_y
+    pass
+
+
 # 制作EAR数据集，start与end是视频截图序号，dateset_path是数据集文件路径，photo_folder_path是图片文件夹路径
 def write_EAR(start, end, dateset_path, photo_folder_path):
     training_file = open(dateset_path, mode="w", newline="")
@@ -69,4 +90,34 @@ def write_MAR(start, end, dateset_path, photo_folder_path):
         idx = idx + 1
     pass
     training_file.close()
+    pass
+
+
+# 制作EBAR数据集，start与end分别为图片起始与终止序号，dateset_path和result_path是数据集、结果集路径
+# photo_folder_path是图片文件夹路径
+def write_EBAR(start, end, dateset_path, result_path, photo_folder_path):
+    dataset_file = open(dateset_path, mode="w", newline="")
+    result_file = open(result_path, mode="w", newline="")
+    csvdataset_write = csv.writer(dataset_file)
+    csvresult_write = csv.writer(result_file)
+    idx = start
+    while idx < end:
+        image = cv2.imread(photo_folder_path + str(idx) + ".jpg")
+        landmark = face_landmark(image)
+
+        eyebrow = []
+        for left_eyebrow_point in landmark['left_eyebrow']:
+            eyebrow.append(left_eyebrow_point)
+        for right_euebrow_point in landmark['right_eyebrow']:
+            eyebrow.append(right_euebrow_point)
+
+        eyebrow_x, eyebrow_y = eyebrow_aspect_ratio(eyebrow)
+        for x in eyebrow_x:
+            csvdataset_write.writerow([x])
+        for y in eyebrow_y:
+            csvresult_write.writerow([y])
+        # print(idx, left_ebar, right_ebar, "\n")
+        idx = idx + 1
+    pass
+    dataset_file.close()
     pass

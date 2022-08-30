@@ -3,7 +3,7 @@ from keras.models import load_model
 import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.optimizers import Adadelta
+from keras.optimizers import Adadelta, adam
 import matplotlib.pyplot as plt
 
 
@@ -119,8 +119,39 @@ def train_MAR(train_data_path, train_label_path, test_data_path, test_label_path
     pass
 
 
+# 构建并训练EBAR值分类深度学习神经网络
+def train_EBAR(train_data_path, train_label_path, test_data_path, test_label_path):
+    batch_size = 16
+    num_classes = 1
+    epochs = 500
+    (x_train, y_train), (x_test, y_test) = load_data(train_data_path, train_label_path, test_data_path, test_label_path)
+    x_train = x_train.astype('float32')
+    y_train = y_train.astype('float32')
+    x_test = x_test.astype('float32')
+    y_test = y_test.astype('float32')
+    # y_train = keras.utils.to_categorical(y_train, num_classes)
+    # y_test = keras.utils.to_categorical(y_test, num_classes)
+
+    # x_train *= 4
+    # x_test *= 4
+
+    model = Sequential()
+    # 确定输入层节点数及输入格式
+    model.add(Dense(16, activation='sigmoid', input_shape=(1,)))
+    # 确定隐藏层节点数
+    model.add(Dense(5, activation='relu'))
+    model.add(Dense(num_classes))
+    # model.summary()
+    model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
+    train_history = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1,
+                              validation_data=(x_test, y_test))
+    # model.save('D:/Pycharm/PythonProject/attempt/eyebrow_angry_model.h5')
+    return train_history, model
+    pass
+
+
 # 绘制深度学习神经网络训练结果图像
-def print_history(train_history):
+def print_history1(train_history):
     # 绘制训练 & 验证(回归)的准确率值
     plt.plot(train_history.history['accuracy'])
     plt.plot(train_history.history['val_accuracy'])
@@ -132,6 +163,42 @@ def print_history(train_history):
     plt.xlabel('Epoch')
     plt.legend(['Train_acc', 'Val_acc', 'Train_loss', 'Val_loss'])
     plt.show()
+    pass
+
+
+def print_history2(history):
+    loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    epochs = range(1, len(loss) + 1)
+    plt.plot(epochs, loss, 'g.', label='traning loss')
+    plt.plot(epochs, val_loss, 'b.', label='validation loss')
+    plt.xlabel('epochs')
+    plt.ylabel('loss')
+    plt.legend()
+    plt.show()
+    pass
+
+
+def print_history3(x_train, y_train, model_normal, model_angry):
+    predictions_normal = []
+    predictions_angry = []
+    x_train = x_train.astype('float32')
+    y_train = y_train.astype('float32')
+    for i in range(0, len(x_train)):
+        prediction_normal = model_normal.predict(x_train[i])
+        prediction_angry = model_angry.predict(x_train[i])
+        predictions_normal.append(prediction_normal)
+        predictions_angry.append(prediction_angry)
+
+    fig = plt.figure()  # 创建画布
+    ax = fig.add_subplot(111)
+
+    x_train = list(np.array(x_train).flatten())
+    y_train = list(np.array(y_train).flatten())
+    # p1 = ax.scatter(x_train, y_train, marker='.', color='black', s=8)
+    p2 = ax.scatter(x_train, predictions_normal, marker='.', color='red', s=8)
+    p3 = ax.scatter(x_train, predictions_angry, marker='.', color='blue', s=8)
+    plt.show()  # 显示散点图
     pass
 
 
