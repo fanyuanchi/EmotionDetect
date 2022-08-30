@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 # Default ignored files
+=======
+# 默认忽略的文件
+>>>>>>> 7185f5a (重构后的再次提交。)
 /shelf/
 /workspace.xml

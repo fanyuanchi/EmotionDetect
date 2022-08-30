@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/attempt.iml" filepath="$PROJECT_DIR$/.idea/attempt.iml" />
+=======
+      <module fileurl="file://$PROJECT_DIR$/.idea/EmotionDetect.iml" filepath="$PROJECT_DIR$/.idea/EmotionDetect.iml" />
+>>>>>>> 7185f5a (重构后的再次提交。)
     </modules>
   </component>
 </project>
