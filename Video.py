@@ -1,5 +1,7 @@
 import cv2
-import winsound
+import pygame
+import sys
+import time
 
 
 # 初始化摄像头并令其空转一定时间，否则曝光度不够
@@ -13,10 +15,26 @@ def init_camera():
     pass
 
 
-# 发出警报
-def alert():
-    duration = 500  # 单次警报时长
-    freq = 700  # 单次警报音频
-    for i in range(0, 3, 1): # 重复警报三次
-        winsound.Beep(freq, duration)
+# 愤怒安抚
+def alert_angry():
+    pygame.init()
+    pygame.mixer.init()
+    # screen = pygame.display.set_mode([640, 480])
+    # pygame.time.delay(1000)  # 等待1秒让mixer完成初始化
+    sound = pygame.mixer.Sound("D:/Pycharm/PythonProject/ModelFile/angry.wav")
+    sound.play()
+    time.sleep(3.1)
+    pygame.mixer.music.stop()
     pass
+
+
+# 疲劳警报
+def alert_sleepy():
+    pygame.init()
+    pygame.mixer.init()
+    # screen = pygame.display.set_mode([640, 480])
+    # pygame.time.delay(1000)  # 等待1秒让mixer完成初始化
+    sound = pygame.mixer.Sound("D:/Pycharm/PythonProject/ModelFile/sleepy.wav")
+    sound.play()
+    time.sleep(3.2)
+    pygame.mixer.music.stop()

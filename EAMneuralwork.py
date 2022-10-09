@@ -58,7 +58,7 @@ def load_data(train_data_path, train_label_path, test_data_path, test_label_path
 
 
 # 构建并训练EAR值分类深度学习神经网络
-def train_EAR(train_data_path, train_label_path, test_data_path, test_label_path):
+def train_EAR(train_data_path, train_label_path, test_data_path, test_label_path, model_path):
     # 分批训练集每一批训练个数
     batch_size = 1
     # 分类个数，此为二分类
@@ -89,13 +89,13 @@ def train_EAR(train_data_path, train_label_path, test_data_path, test_label_path
     model.compile(loss='categorical_crossentropy', optimizer=Adadelta(), metrics=['accuracy'])
     train_history = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1,
                               validation_data=(x_test, y_test))
-    # model.save('D:/Pycharm/PythonProject/attempt/eye_model.h5')
+    # model.save(model_path)
     return train_history, model
     pass
 
 
 # 构建并训练MAR值分类深度学习神经网络
-def train_MAR(train_data_path, train_label_path, test_data_path, test_label_path):
+def train_MAR(train_data_path, train_label_path, test_data_path, test_label_path, model_path):
     batch_size = 1
     num_classes = 3
     epochs = 25
@@ -114,13 +114,13 @@ def train_MAR(train_data_path, train_label_path, test_data_path, test_label_path
     model.compile(loss='categorical_crossentropy', optimizer=Adadelta(), metrics=['accuracy'])
     train_history = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1,
                               validation_data=(x_test, y_test))
-    # model.save('D:/Pycharm/PythonProject/attempt/mouth_model.h5')
+    # model.save(model_path)
     return train_history, model
     pass
 
 
 # 构建并训练EBAR值分类深度学习神经网络
-def train_EBAR(train_data_path, train_label_path, test_data_path, test_label_path):
+def train_EBAR(train_data_path, train_label_path, test_data_path, test_label_path, model_path):
     batch_size = 16
     num_classes = 1
     epochs = 500
@@ -145,7 +145,7 @@ def train_EBAR(train_data_path, train_label_path, test_data_path, test_label_pat
     model.compile(loss='mse', optimizer='rmsprop', metrics=['mae'])
     train_history = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, verbose=1,
                               validation_data=(x_test, y_test))
-    # model.save('D:/Pycharm/PythonProject/attempt/eyebrow_angry_model.h5')
+    # model.save(model_path)
     return train_history, model
     pass
 

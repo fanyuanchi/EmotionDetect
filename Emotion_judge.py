@@ -1,4 +1,4 @@
-from Video import alert
+from Video import alert_sleepy, alert_angry
 
 
 # 疲劳检测函数，eye_result为眼部动作识别结果，mouth_result为嘴部动作识别结果
@@ -35,9 +35,8 @@ def sleepy_judge(eye_result, mouth_result, eye_buffer, mouth_buffer, index):
     else:
         rate = max((close_counter + yawn_counter) / (open_counter + normal_counter),
                    (close_counter / open_counter), (yawn_counter / normal_counter))
-    if rate > 0.6:
-        alert()
-        print(index, " You're sleepy!!!\n")
+    if rate > 1.5 and index % 7 == 0:
+        alert_sleepy()
         return rate, True
     return rate, False
     pass
@@ -75,9 +74,8 @@ def angry_judge(eyebrow_result, mouth_result, eyebrow_buffer, mouth_buffer, inde
     else:
         rate = max((frown_counter + speak_counter) / (normal_counter + other_counter),
                    (frown_counter / normal_counter))
-    if rate > 0.5:
-        alert()
-        print(index, " You're angry!!!\n")
+    if rate > 1.5 and index % 7 == 0:
+        alert_angry()
         return rate, True
     return rate, False
     pass

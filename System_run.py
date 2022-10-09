@@ -13,10 +13,10 @@ def main():
     buffer1 = []
     buffer2 = []
     buffer3 = []
-    eye_model = load_neural('D:/Pycharm/PythonProject/attempt/eye_model.h5')
-    mouth_model = load_neural('D:/Pycharm/PythonProject/attempt/mouth_model.h5')
-    eyebrow_normal_model = load_neural('D:/Pycharm/PythonProject/attempt/eyebrow_normal_model.h5')
-    eyebrow_angry_model = load_neural('D:/Pycharm/PythonProject/attempt/eyebrow_angry_model.h5')
+    eye_model = load_neural('D:/Pycharm/PythonProject/ModelFile/eye_model.h5')
+    mouth_model = load_neural('D:/Pycharm/PythonProject/ModelFile/mouth_model.h5')
+    eyebrow_normal_model = load_neural('D:/Pycharm/PythonProject/ModelFile/eyebrow_normal_model.h5')
+    eyebrow_angry_model = load_neural('D:/Pycharm/PythonProject/ModelFile/eyebrow_angry_model.h5')
     cap = init_camera()
     while True:
         flag, frame = cap.read()
@@ -66,22 +66,20 @@ def main():
                 predictions_angry[i] - eyebrow_y[i]) else 1
             eyebrow_result.append(point_result)
         eyebrow_result.pop(9)
-        if eyebrow_result[4] == 0 and eyebrow_result[5] == 0:
+        if eyebrow_result[4] == 1 and eyebrow_result[5] == 1:
             extra_val = 2
-        elif eyebrow_result[4] == 1 and eyebrow_result[5] == 1:
+        elif eyebrow_result[4] == 0 and eyebrow_result[5] == 0:
             extra_val = 0
         else:
             extra_val = 1
-        res3 = 0 if eyebrow_result.count(0) + extra_val > 3 else 1
+        res3 = 1 if eyebrow_result.count(1) + extra_val > 4 else 0
         # 情绪短路判断
-        if res3 == 0:
+        if res3 == 1:
             res1 = 1
         # 情绪识别
         rate2, judge2 = angry_judge(res3, res2, buffer3, buffer2, idx)
-        if not judge2:
-            rate1, judge1 = sleepy_judge(res1, res2, buffer1, buffer2, idx)
-        else:
-            rate1 = 0
+        rate1, judge1 = sleepy_judge(res1, res2, buffer1, buffer2, idx)
+        # print(res1, res2, res3, "\n")
         print(idx, rate1, rate2, "\n")
         key_pressed = cv2.waitKey(100)
         if key_pressed == 27:
